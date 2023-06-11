@@ -1,6 +1,6 @@
 # Odin
 
-OdinClient is a versatile Forge mod tailored specifically for Hypixel Skyblock, offering a host of features designed to enhance your gameplay. You can access the GUI via the `/od` or `/odinclient` commands.
+Odin is a versatile Forge mod tailored specifically for Hypixel Skyblock, offering a host of features designed to enhance your gameplay. You can access the GUI via the `/od` or `/odin` commands.
 
 As far as the community is aware this mod should not break any hypixel rules but keep in mind like all skyblock modifications it is use at your own risk
 ## Features
@@ -42,4 +42,4 @@ As far as the community is aware this mod should not break any hypixel rules but
 - **Broken Hype:** Sends alerts when your Hype stops granting combat XP.
 - **Kuudra Alerts:** Sends notifications regarding specific Kuudra events.
 
-Note that the specifics of these features might vary depending on the version of OdinClient you are using and your specific client configuration.
+Note that the specifics of these features might vary depending on the version of Odin you are using and your specific client configuration.
