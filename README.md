@@ -18,7 +18,7 @@ As far as the community is aware this mod should not break any hypixel rules but
 
 ### General
 - **Blaze Atunement:** Outlines the Slayer boss with the color of atunement.
-- **Camera:** Enables you to adjust the camera range.
+- **Camera:** Allows you to disable front camera.
 - **Deployable Timer:** Displays the active deployable and the remaining time.
 - **Highlights:** Highlights mobs as per your choice (/esp).
 - **FPS:** Fixes certain Hypixel elements to improve performance.
