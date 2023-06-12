@@ -202,8 +202,8 @@ object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/LogoSmall
         size = 2
     )
     fun addStar() {
-        if (miscConfig.espList.contains("✯")) return
-        miscConfig.espList.add("✯")
+        if (miscConfig.hightlightList.contains("✯")) return
+        miscConfig.hightlightList.add("✯")
         miscConfig.saveAllConfigs()
     }
 

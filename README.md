@@ -20,7 +20,7 @@ As far as the community is aware this mod should not break any hypixel rules but
 - **Blaze Atunement:** Outlines the Slayer boss with the color of atunement.
 - **Camera:** Enables you to adjust the camera range.
 - **Deployable Timer:** Displays the active deployable and the remaining time.
-- **Highlights:** Highlights mobs as per your choice (/esp).
+- **Highlights:** Highlights mobs as per your choice (/highlight).
 - **FPS:** Fixes certain Hypixel elements to improve performance.
 - **Vanquisher Notifier:** Sends alerts and messages when a Vanquisher spawns.
 - **Waypoints:** Allows the creation of waypoints with various triggers.

@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 
 object HighLights {
 
-    private inline val espList get() = Odin.miscConfig.espList
+    private inline val hightlightList get() = Odin.miscConfig.hightlightList
     
     private var color = config.highlightColor.toJavaColor()
 
@@ -25,7 +25,7 @@ object HighLights {
         color = config.highlightColor.toJavaColor()
         mc.theWorld?.loadedEntityList?.filterIsInstance<EntityArmorStand>()?.forEach { entity ->
             if (
-                !espList.any { entity.name.lowercase().contains(it) } ||
+                !hightlightList.any { entity.name.lowercase().contains(it) } ||
                 currentEntities.containsKey(entity.entityId)
             ) return@forEach
 

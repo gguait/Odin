@@ -12,10 +12,10 @@ object BlacklistCommand : Command("blacklist", "odblacklist") {
             when (args[0]) {
                 "add" -> {
                     if (args.size == 1) return modMessage("You need to name someone to add to the Blacklist.")
-                    val playerName = args[1]
-                    if (miscConfig.blacklist.contains(playerName)) return modMessage("$playerName is already in the Blacklist.")
+                    val playerName = args[1].lowercase()
+                    if (miscConfig.blacklist.contains(playerName)) return modMessage("§7$playerName §ris already in the Blacklist.")
 
-                    modMessage("Added $playerName to Blacklist.")
+                    modMessage("Added §7$playerName §rto Blacklist.")
                     miscConfig.blacklist.add(playerName)
                     miscConfig.saveAllConfigs()
                 }
@@ -23,9 +23,9 @@ object BlacklistCommand : Command("blacklist", "odblacklist") {
                 "remove" -> {
                     if (args.size == 1) return modMessage("You need to name someone to remove from the Blacklist.")
                     val playerName = args[1]
-                    if (!miscConfig.blacklist.contains(playerName)) return modMessage("$playerName isn't in the Blacklist.")
+                    if (!miscConfig.blacklist.contains(playerName)) return modMessage("§7$playerName §risn't in the Blacklist.")
 
-                    modMessage("Removed $playerName from Blacklist.")
+                    modMessage("Removed §7$playerName §rfrom Blacklist.")
                     miscConfig.blacklist.remove(playerName)
                     miscConfig.saveAllConfigs()
                 }

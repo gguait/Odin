@@ -19,9 +19,8 @@ class MiscConfig(path: File) {
     private val terminalPBFile = File(path, "terminalPB.json")
     private val hasJoinedFile = File(path, "hasJoined.json")
 
-    var espList: MutableList<String> = mutableListOf()
+    var hightlightList: MutableList<String> = mutableListOf()
     var blacklist: MutableList<String> = mutableListOf()
-    var autoSell: MutableList<String> = mutableListOf()
     private inline val terminalPB get() = TerminalTimes.Times.values().map { "${it.fullName}: ${it.time}"}
     var hasJoined: Boolean = false
 
@@ -41,7 +40,7 @@ class MiscConfig(path: File) {
         try {
             with(highlightConfigFile.bufferedReader().use { it.readText() }) {
                 if (this == "") return
-                espList = gson.fromJson(this, object : TypeToken<MutableList<String>>() {}.type)
+                hightlightList = gson.fromJson(this, object : TypeToken<MutableList<String>>() {}.type)
             }
             with(blacklistConfigFile.bufferedReader().use { it.readText() }) {
                 if (this == "") return
@@ -77,7 +76,7 @@ class MiscConfig(path: File) {
         GlobalScope.launch {
             try {
                 highlightConfigFile.bufferedWriter().use {
-                    it.write(gson.toJson(espList))
+                    it.write(gson.toJson(hightlightList))
                 }
                 blacklistConfigFile.bufferedWriter().use {
                     it.write(gson.toJson(blacklist))
