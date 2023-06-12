@@ -7,8 +7,8 @@ As far as the community is aware this mod should not break any hypixel rules but
 
 ### Dungeon
 - **Mask Alert:** Provides notifications when a mask becomes available.
-- **Auto Ready:** Sends reminders to ready up when a dungeon starts.
-- **Auto Ult:** Sends reminders to use your ult in specific scenarios.
+- **Ready Alert:** Sends reminders to ready up when a dungeon starts.
+- **Ult Alert:** Sends reminders to use your ult in specific scenarios.
 - **Wish Alert:** Sends alerts when a teammate's health is low.
 - **Can Clip:** Indicates when you can clip through a stair while battling a boss.
 - **Key Highlight:** Highlights the Wither/Blood key with a box.
