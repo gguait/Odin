@@ -25,7 +25,7 @@ object GuildCommands {
         GlobalScope.launch {
             delay(150)
             ChatUtils.guildCmdsOptions(msg!!, ign!!)
-            if (config.guildGM && mc.thePlayer.name !== ign) ChatUtils.autoGM(msg, ign)
+            if (config.guildGM && mc.thePlayer.name !== ign) ChatUtils.autoGM(msg.drop(1), ign)
         }
 
     }

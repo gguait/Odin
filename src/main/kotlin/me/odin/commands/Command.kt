@@ -5,10 +5,11 @@ import net.minecraft.command.ICommandSender
 import java.lang.StringBuilder
 
 abstract class Command(
-    private vararg val names: String
+    private val name: String,
+    private val alias: List<String>
 ) : CommandBase() {
-    final override fun getCommandName() = this.names[0]
-    final override fun getCommandAliases() = this.names.drop(1)
+    final override fun getCommandName() = name
+    final override fun getCommandAliases() = alias
     final override fun getRequiredPermissionLevel() = 0
     final override fun getCommandUsage(sender: ICommandSender) = "/$commandName"
     final override fun processCommand(sender: ICommandSender, args: Array<String>) = executeCommand(args.onEach { it.lowercase() })

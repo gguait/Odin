@@ -4,6 +4,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import me.odin.Odin.Companion.config
 import me.odin.utils.render.RenderUtils
+import me.odin.utils.skyblock.dungeon.DungeonUtils
 
 object P5Waypoints {
 // TODO make this into the waypoint system
@@ -27,7 +28,7 @@ object P5Waypoints {
 
     @SubscribeEvent
     fun onRenderWorldLastEvent(event: RenderWorldLastEvent) {
-        if (!config.p5Waypoint/* || DungeonUtils.getPhase() != 5*/) return
+        if (!config.p5Waypoint || DungeonUtils.getPhase() != 5) return
         for (location in locations) {
             RenderUtils.renderBoxText("§f${location.label}", location.x, location.y, location.z, 200, 145, 234)
         }

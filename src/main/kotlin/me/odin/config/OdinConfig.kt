@@ -9,7 +9,7 @@ import cc.polyfrost.oneconfig.config.data.ModType
 import me.odin.Odin.Companion.miscConfig
 import me.odin.hud.*
 
-object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/LogoSmall.png"), "odin.json") {
+object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/OdinLogoBig.png"), "odin.json") {
 
     fun init() {
         initialize()
@@ -24,7 +24,7 @@ object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/LogoSmall
         name = "Dungeon key highlight",
         description = "Dungeon key highlight",
         category = "Dungeon",
-        subcategory = "KeyHighlight",
+        subcategory = "Dungeon key highlight",
         size = 2
     )
     var keyESP = false

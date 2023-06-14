@@ -2,6 +2,7 @@ package me.odin.features.m7
 
 import me.odin.Odin.Companion.config
 import me.odin.utils.render.RenderUtils
+import me.odin.utils.skyblock.ChatUtils
 import me.odin.utils.skyblock.WorldUtils
 import me.odin.utils.skyblock.dungeon.DungeonUtils
 import net.minecraft.util.BlockPos
@@ -30,6 +31,7 @@ object DragonBoxes {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (!config.dragonBoxes || DungeonUtils.getPhase() != 5) return
+        ChatUtils.modMessage(DungeonUtils.getPhase().toString())
         DragonColors.values().forEach{ it.checkAlive() }
     }
 

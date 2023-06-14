@@ -11,7 +11,7 @@
 	  "Odin", "Cezar", "Stivais", "Bonsai", "Ilmars"
 	],
 	"credits": "Odin, Cezar, Stivai, Bonsai, Ilmars and many more who helped along the way",
-	"logoFile": "assets/odin/OdinClientNoBackground.png",
+	"logoFile": "assets/odin/OdinLogoBig.png",
 	"screenshots": [],
 	"dependencies": []
   }

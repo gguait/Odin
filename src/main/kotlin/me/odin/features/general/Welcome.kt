@@ -30,6 +30,7 @@ object Welcome {
             
             §7Thanks for installing §3Odin §7!
             §7You are currently on version ${Odin.VERSION}.
+            
             §eUse §d§l/od §r§eto access GUI settings.
             §eUse §d§l/od help §r§efor all of of the commands.
              

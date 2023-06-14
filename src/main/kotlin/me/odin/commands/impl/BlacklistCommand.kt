@@ -4,7 +4,7 @@ import me.odin.Odin.Companion.miscConfig
 import me.odin.commands.Command
 import me.odin.utils.skyblock.ChatUtils.modMessage
 
-object BlacklistCommand : Command("blacklist", "odblacklist") {
+object BlacklistCommand : Command("blacklist", listOf("odblacklist")) {
     override fun executeCommand(args: Array<String>) {
         if (args.isEmpty())
             modMessage("§cArguments empty. §fUsage: add, remove, clear, list")

@@ -5,7 +5,7 @@ import me.odin.Odin.Companion.config
 import me.odin.commands.Command
 import me.odin.utils.skyblock.ChatUtils.modMessage
 
-object OdinCommand : Command( "od", "odin") {
+object OdinCommand : Command("odinclient", listOf("od", "odin")) {
     override fun executeCommand(args: Array<String>) {
         if (args.isEmpty())
             config.openGui()

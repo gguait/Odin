@@ -30,6 +30,7 @@ class MiscConfig(path: File) {
             highlightConfigFile.createNewFile()
             blacklistConfigFile.createNewFile()
             terminalPBFile.createNewFile()
+            hasJoinedFile.createNewFile()
         } catch (e: Exception) {
             println("Error initializing configs.")
         }

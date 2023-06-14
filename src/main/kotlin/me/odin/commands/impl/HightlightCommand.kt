@@ -5,7 +5,7 @@ import me.odin.commands.Command
 import me.odin.features.general.HighLights
 import me.odin.utils.skyblock.ChatUtils.modMessage
 
-object HightlightCommand : Command("highlight", "odhighlight") {
+object HightlightCommand : Command("highlight", listOf("odhighlight")) {
 
     private inline val hightlightList get() = miscConfig.hightlightList
 

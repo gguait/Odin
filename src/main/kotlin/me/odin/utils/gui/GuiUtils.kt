@@ -1,7 +1,5 @@
 package me.odin.utils.gui
 
-import cc.polyfrost.oneconfig.renderer.font.Font
-import cc.polyfrost.oneconfig.renderer.font.Fonts
 import cc.polyfrost.oneconfig.renderer.scissor.ScissorHelper
 import cc.polyfrost.oneconfig.utils.dsl.*
 import me.odin.ui.waypoint.WaypointGUI
@@ -18,7 +16,7 @@ object GuiUtils {
     val scaledHeight get() =
         ScaledResolution(WaypointGUI.mc).scaledHeight
 
-    val scaleFactor: Float
+    inline val scaleFactor: Float
         get() {
             val scale = (scaledWidth / 960f).coerceAtMost(scaledHeight / 540f)
             return (scale.coerceAtLeast(1f / 1280f).coerceAtLeast(1f / 800f)).coerceIn(0.05f, 1f)
@@ -40,8 +38,5 @@ object GuiUtils {
         ScissorHelper.INSTANCE.clearScissors(this.instance)
     }
 
-    fun VG.drawCustomCenteredText(string: String, x: Number, y: Number, color: Int, size: Number = 16f, font: Font = Fonts.REGULAR) {
-        val textWidth = (x.toFloat() - this.getTextWidth(string, size, font) / 2f)
-        this.drawText(string, textWidth, y, color, size, font)
-    }
+
 }
