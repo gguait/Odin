@@ -18,11 +18,9 @@ As far as the community is aware this mod should not break any hypixel rules but
 
 ### General
 - **Blaze Atunement:** Outlines the Slayer boss with the color of atunement.
-- **Camera:** Allows you to disable front camera.
 - **Deployable Timer:** Displays the active deployable and the remaining time.
 - **Highlights:** Highlights mobs as per your choice (/highlight).
 - **FPS:** Fixes certain Hypixel elements to improve performance.
-- **Vanquisher Notifier:** Sends alerts and messages when a Vanquisher spawns.
 - **Waypoints:** Allows the creation of waypoints with various triggers.
 - **Party Commands:** Provides custom commands for party use (!help in party chat).
 - **Guild Commands:** Provides custom commands for guild use (!help in guild chat).
@@ -41,5 +39,10 @@ As far as the community is aware this mod should not break any hypixel rules but
 - **Auto Sprint:** Toggles sprint.
 - **Broken Hype:** Sends alerts when your Hype stops granting combat XP.
 - **Kuudra Alerts:** Sends notifications regarding specific Kuudra events.
+- **Camera:** Allows you to disable front camera.
+- **No Crusor Reset:** Prevents your cursor from getting reset when swapping GUI.
+- **Reminders:** All sort of reminders for different parts of the game
+- **Gyro Range:** Shows the range of the gyrokinetic wand.
+- **Vanquisher Notifier:** Sends alerts and messages when a Vanquisher spawns.
 
 Note that the specifics of these features might vary depending on the version of Odin you are using and your specific client configuration.
