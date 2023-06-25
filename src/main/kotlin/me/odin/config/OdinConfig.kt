@@ -15,9 +15,6 @@ object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/logo.png"
         initialize()
     }
 
-
-
-
     // Dungeon
 
     @Switch(

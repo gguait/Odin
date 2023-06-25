@@ -1,7 +1,6 @@
 package me.odin.features.qol
 
 
-import cc.polyfrost.oneconfig.libs.universal.ChatColor.Companion.stripControlCodes
 import me.odin.Odin.Companion.config
 import me.odin.Odin.Companion.mc
 import me.odin.utils.render.RenderUtils

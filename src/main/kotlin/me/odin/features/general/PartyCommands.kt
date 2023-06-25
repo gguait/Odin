@@ -6,6 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.odin.Odin.Companion.config
 import me.odin.utils.skyblock.ChatUtils
+import me.odin.utils.skyblock.ChatUtils.dtToggle
 import me.odin.utils.skyblock.PlayerUtils
 import net.minecraft.util.StringUtils
 import net.minecraftforge.client.event.ClientChatReceivedEvent
@@ -28,6 +29,21 @@ object PartyCommands {
         GlobalScope.launch{
             delay(150)
             ChatUtils.partyCmdsOptions(msg!!, ign!!)
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    @SubscribeEvent
+    fun dt(event: ClientChatReceivedEvent) {
+        if (!config.partyCommands) return
+        val message = StringUtils.stripControlCodes(event.message.unformattedText)
+        if (!message.contains("EXTRA STATS") && !dtToggle) return
+        GlobalScope.launch{
+            delay(2500)
+            PlayerUtils.alert("§c${ChatUtils.dtPlayer} needs downtime")
+            ChatUtils.partyMessage("${ChatUtils.dtPlayer} needs downtime")
+            dtToggle = true
+            ChatUtils.dtPlayer = null
         }
     }
 

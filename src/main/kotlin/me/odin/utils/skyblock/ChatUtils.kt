@@ -6,7 +6,6 @@ import me.odin.features.general.BlackList
 import me.odin.utils.AutoSessionID
 import me.odin.utils.Server
 import me.odin.utils.WebUtils
-import net.minecraft.client.Minecraft
 import net.minecraft.util.ChatComponentText
 import net.minecraftforge.client.ClientCommandHandler
 import kotlin.math.floor
@@ -109,7 +108,8 @@ object ChatUtils {
         if(message.lowercase().startsWith("gm")) guildMessage("gm $name")
         if(message.lowercase().startsWith("gn")) guildMessage("gn $name")
     }
-
+    var dtToggle = false
+    var dtPlayer: String? = null
     suspend fun partyCmdsOptions(message: String, name: String) {
         if (BlackList.isInBlacklist(name)) return
         when (message.split(" ")[0]) {
@@ -145,6 +145,13 @@ object ChatUtils {
                 delay(350)
             }
             "ping" -> partyMessage("Current Ping: ${floor(Server.averagePing)}ms")
+            "dt" -> {
+                modMessage("Reminder set for the end of the run!")
+                dtToggle = false
+                dtToggle = true
+                dtPlayer = name
+            }
+
         }
     }
 

@@ -90,7 +90,6 @@ class Odin {
             NoCursorReset,
             DungeonUtils,
             Welcome,
-            ArrowTrajectory,
             this
         ).forEach {
             MinecraftForge.EVENT_BUS.register(it)

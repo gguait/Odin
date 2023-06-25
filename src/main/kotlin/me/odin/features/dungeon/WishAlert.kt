@@ -33,7 +33,7 @@ object WishAlert {
             println("Current HP: $currentHp, Health Percent: $healthPercent")
             println("is ghost ${DungeonUtils.isGhost}")
             if (currentHp < 40 * (config.healthPrecentage / 100) && !DungeonUtils.isGhost) {
-                ChatUtils.modMessage("§7${entityPlayer.first.name}§a is at less than §c${floor(config.healthPrecentage)}% §aHP! Wishing!")
+                ChatUtils.modMessage("§7${entityPlayer.first.name}§a is at less than §c${floor(config.healthPrecentage)}% §aHP!")
                 PlayerUtils.alert("USE WISH")
                 canWish = false
             }

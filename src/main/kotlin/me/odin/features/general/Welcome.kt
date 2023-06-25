@@ -26,7 +26,7 @@ object Welcome {
         miscConfig.saveAllConfigs()
         UChat.chat("""
             ${ChatUtils.getChatBreak().dropLast(1)}
-            §d§kOdinOnTopWeLoveOdin :)))))))))
+            §d§kOdinOnTopWeLoveOdinIsLiteralyTheBestNoDoubt
             
             §7Thanks for installing §3Odin §7!
             §7You are currently on version ${Odin.VERSION}.
@@ -41,7 +41,7 @@ object Welcome {
 
         UChat.chat("""
             
-            §d§kOdinOnTopWeLoveOdin :)))))))))
+            §d§kOdinOnTopWeLoveOdinIsLiteralyTheBestNoDoubt
             ${ChatUtils.getChatBreak()}
         """.trimIndent())
 

@@ -8,9 +8,9 @@
 	"url": "https://discord.gg/2nCbC9hkxT ",
 	"updateUrl": "",
 	"authorList": [
-	  "Odin", "Cezar", "Stivais", "Bonsai", "Ilmars"
+	  "Odin", "Bonsai", "Stivais", "Cezar"
 	],
-	"credits": "Odin, Cezar, Stivai, Bonsai, Ilmars and many more who helped along the way",
+	"credits": "Odin, Bonsai, Stivais, Cezar and many more who helped along the way",
 	"logoFile": "assets/odin/logo.png",
 	"screenshots": [],
 	"dependencies": []
