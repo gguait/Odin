@@ -31,7 +31,6 @@ object DragonBoxes {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (!config.dragonBoxes || DungeonUtils.getPhase() != 5) return
-        ChatUtils.modMessage(DungeonUtils.getPhase().toString())
         DragonColors.values().forEach{ it.checkAlive() }
     }
 
