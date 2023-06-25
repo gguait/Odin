@@ -113,8 +113,13 @@ object ChatUtils {
     suspend fun partyCmdsOptions(message: String, name: String) {
         if (BlackList.isInBlacklist(name)) return
         when (message.split(" ")[0]) {
-            "help" -> partyMessage("Commands: warp, coords, allinvite, odin, boop, cf, 8ball, dice, cat, rs, pt, rat, ping")
+            "help" -> partyMessage("Commands: warp, coords, allinvite, odin, boop, cf, 8ball, dice, cat, rs, pt, rat, ping, warptransfer")
             "warp" -> sendCommand("p warp")
+            "warptransfer" -> {
+                sendCommand("p warp")
+                delay(500)
+                sendCommand("p transfer $name")
+            }
             "coords" -> partyMessage("x: ${PlayerUtils.getFlooredPlayerCoords()?.x}, y: ${PlayerUtils.getFlooredPlayerCoords()?.y}, z: ${PlayerUtils.getFlooredPlayerCoords()?.z}")
             "allinvite" -> sendCommand("p settings allinvite")
             "odin" -> partyMessage("Odin! https://discord.gg/2nCbC9hkxT")
