@@ -108,7 +108,7 @@ object ChatUtils {
         if(message.lowercase().startsWith("gm")) guildMessage("gm $name")
         if(message.lowercase().startsWith("gn")) guildMessage("gn $name")
     }
-    var dtToggle = false
+
     var dtPlayer: String? = null
     suspend fun partyCmdsOptions(message: String, name: String) {
         if (BlackList.isInBlacklist(name)) return
@@ -152,11 +152,8 @@ object ChatUtils {
             "ping" -> partyMessage("Current Ping: ${floor(Server.averagePing)}ms")
             "dt" -> {
                 modMessage("Reminder set for the end of the run!")
-                dtToggle = false
-                dtToggle = true
                 dtPlayer = name
             }
-
         }
     }
 
