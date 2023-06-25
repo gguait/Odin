@@ -13,7 +13,7 @@ import me.odin.utils.gui.animations.ColorAnimation
 import net.minecraft.util.StringUtils
 import java.awt.Color
 
-class WaypointElement(private val waypoint: Waypoint) {
+class WaypointElement(val waypoint: Waypoint) {
     private val name get() = StringUtils.stripControlCodes(waypoint.name)
     private val colorAnimation = ColorAnimation(150)
     var y = 0f
@@ -31,9 +31,9 @@ class WaypointElement(private val waypoint: Waypoint) {
 
             val color = colorAnimation.getValue(waypoint.color, Color(21, 22, 23), waypoint.shouldShow).rgb
             drawRoundedRect(20, y + 6, 18, 18, 5f, color)
-            drawSVG("/assets/odinclient/trash.svg", 442, y + 6, 18, 18, Color.WHITE.rgb, 100, javaClass)
+            drawSVG("/assets/odin/trash.svg", 442, y + 6, 18, 18, -1, 100, javaClass) // get better svg it looks so pixelated
 
-            var currentX = 58f
+            var currentX = 40f
             for (i in inputFields) {
                 i.x = currentX
                 currentX += i.draw(vg, currentX, y + 15, -1)
@@ -42,21 +42,24 @@ class WaypointElement(private val waypoint: Waypoint) {
         return 40
     }
 
-    fun mouseClicked(mouseButton: Int) {
+    fun mouseClicked(mouseButton: Int): Boolean {
         if (mouseButton == 0) {
-            if (mouseHandler.isAreaHovered(15f, y, 18f, 30f)) {
+            if (mouseHandler.isAreaHovered(20f, y + 6, 18f, 18f)) {
                 colorAnimation.start()
                 waypoint.shouldShow = !waypoint.shouldShow
-                return
+                return true
             } else if (mouseHandler.isAreaHovered(442f, y + 6, 18f, 18f)) {
                 WaypointManager.removeWaypoint(waypoint)
-                WaypointGUI.updateElements()
+                WaypointGUI.list.remove(this)
+
+                return true
             }
 
             for ((index, i) in inputFields.withIndex()) {
-                if (!i.mouseClicked()) saveCurrent(index)
+                if (!i.mouseClicked()) saveCurrent(index) else return true
             }
         }
+        return false
     }
 
     fun keyTyped(typedChar: Char, keyCode: Int) {

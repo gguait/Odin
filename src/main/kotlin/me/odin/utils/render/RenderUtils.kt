@@ -1,5 +1,6 @@
 package me.odin.utils.render
 
+import cc.polyfrost.oneconfig.config.core.OneColor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
@@ -56,6 +57,9 @@ object RenderUtils {
         get() = renderY(mc.thePlayer)
     val playerRenderZ
         get() = renderZ(mc.thePlayer)
+
+    fun Color.bindColor() = GlStateManager.color(this.red / 255f, this.green / 255f, this.blue / 255f, this.alpha / 255f)
+    fun OneColor.bindColor() = GlStateManager.color(this.red / 255f, this.green / 255f, this.blue / 255f, this.alpha / 255f)
 
     fun drawCustomEspBox(x: Double, xWidth: Double, y: Double, yWidth: Double, z: Double, zWidth: Double, color: Color, thickness: Float = 3f, phase: Boolean) {
 
@@ -379,7 +383,7 @@ object RenderUtils {
     fun drawCylinder(
         pos: Vec3, baseRadius: Float, topRadius: Float, height: Float,
         slices: Int, stacks: Int, rot1: Float, rot2: Float, rot3: Float,
-        r: Double, g: Double, b: Double, a: Double, phase: Boolean, linemode: Boolean
+        r: Double, g: Double, b: Double, a: Double, phase: Boolean = false, linemode: Boolean = false
     ) {
         val renderPos = getRenderPos(pos)
         val x = renderPos.xCoord

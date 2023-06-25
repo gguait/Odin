@@ -16,23 +16,9 @@ class InputField(
     private val size: Float,
     private val font: Font
 ) {
-    constructor(defaultText: String, mouseHandler: MouseHandler, size: Float, font: Font) : this(
-        defaultText,
-        null,
-        false,
-        mouseHandler,
-        size,
-        font
-    )
+    constructor(defaultText: String, mouseHandler: MouseHandler, size: Float, font: Font) : this(defaultText, null, false, mouseHandler, size, font)
 
-    constructor(defaultText: Int, prefix: String, mouseHandler: MouseHandler, size: Float, font: Font) : this(
-        defaultText,
-        prefix,
-        true,
-        mouseHandler,
-        size,
-        font
-    )
+    constructor(defaultText: Int, prefix: String, mouseHandler: MouseHandler, size: Float, font: Font) : this(defaultText, prefix, true, mouseHandler, size, font)
 
     private inline val display get() = (if (prefix != null) "$prefix " else "") + text
     var text: String = defaultText.toString()
@@ -40,7 +26,7 @@ class InputField(
 
     var x = 0f
     var y = 0f
-    var width = 0f
+    private var width = 0f
 
     private val outlineAnimation = EaseInOut(250)
     private val inputAnimation = LinearAnimation(325)
@@ -72,7 +58,6 @@ class InputField(
 
     fun keyTyped(typedChar: Char, keyCode: Int) {
         if (!listening) return
-
         if (keyCode == 14 && text.isNotEmpty())
             text = text.dropLast(1)
         else if (((text.isEmpty() && keyCode == Keyboard.KEY_MINUS) || isAllowedCharacter(typedChar)) && text.length <= 30)
@@ -82,5 +67,5 @@ class InputField(
     }
 
     private fun isAllowedCharacter(character: Char): Boolean =
-        character.code != 167 && ((character >= ' ' && !onlyNumbers) || (character.isDigit() && onlyNumbers)) && character.code != 127
+        ((character >= ' ' && !onlyNumbers) || (character.isDigit() && onlyNumbers)) && character.code != 127
 }

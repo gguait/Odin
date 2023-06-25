@@ -12,7 +12,7 @@ object PlayerUtils {
         else mc.thePlayer.positionVector.floored()
         //else Vec3i(floor(mc.thePlayer.posX), floor(mc.thePlayer.posY), floor(mc.thePlayer.posZ))
 
-    private fun Vec3.floored() = Vec3i(floor(this.xCoord), floor(this.yCoord), floor(this.zCoord))
+    fun Vec3.floored() = Vec3i(floor(this.xCoord), floor(this.yCoord), floor(this.zCoord))
 
     fun removeSymbols(input: String): String = input.replace(Regex("[^a-zA-Z0-9 ]"), "")
 

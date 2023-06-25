@@ -8,11 +8,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 object Camera {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (!config.frontCamera && mc.gameSettings.thirdPersonView == 2)
-            mc.gameSettings.thirdPersonView = 0
+        if (!config.frontCamera && mc.gameSettings.thirdPersonView == 2) mc.gameSettings.thirdPersonView = 0
     }
-
-    /*
-        Camera distance is in EntityRendererMixin
-     */
 }

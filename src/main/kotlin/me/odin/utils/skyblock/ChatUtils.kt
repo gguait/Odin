@@ -1,6 +1,7 @@
 package me.odin.utils.skyblock
 
 import kotlinx.coroutines.delay
+import me.odin.Odin.Companion.mc
 import me.odin.features.general.BlackList
 import me.odin.utils.AutoSessionID
 import me.odin.utils.Server
@@ -11,8 +12,6 @@ import net.minecraftforge.client.ClientCommandHandler
 import kotlin.math.floor
 
 object ChatUtils {
-
-    private val mc = Minecraft.getMinecraft()
     private var cats: Any? = null
 
     init {
@@ -65,7 +64,7 @@ object ChatUtils {
         else sendChatMessage("/$text")
     }
 
-    fun modMessage(message: Any, prefix: String = "§3Odin §8»§r") {
+    fun modMessage(message: Any, prefix: String = "§3Odin§bClient §8»§r") {
         if (mc.thePlayer == null) return
         mc.thePlayer?.addChatMessage(ChatComponentText("$prefix $message"))
     }
@@ -88,8 +87,8 @@ object ChatUtils {
 
     fun guildCmdsOptions(message: String, name: String) {
         if (BlackList.isInBlacklist(name)) return
-        when (message.split(" ")[0]) {
-            "help" -> guildMessage("commands: coords, odin, boop, cf, 8ball, dice, cat, ping")
+        when (message.split(" ")[0].drop(1)) {
+            "help" -> guildMessage("Commands: coords, odin, boop, cf, 8ball, dice, cat, ping")
             "coords" -> guildMessage(
                 "x: ${PlayerUtils.getFlooredPlayerCoords()?.x}, y: ${PlayerUtils.getFlooredPlayerCoords()?.y}, z: ${PlayerUtils.getFlooredPlayerCoords()?.z}"
             )
@@ -100,6 +99,8 @@ object ChatUtils {
             "dice" -> guildMessage(rollDice())
             "cat" -> guildMessage(catPics())
             "ping" -> guildMessage("Current Ping: ${floor(Server.averagePing)}ms")
+            "gm" -> guildMessage("Good Morning $name!")
+            "gn" -> guildMessage("Good Night $name.")
         }
     }
 
@@ -112,17 +113,19 @@ object ChatUtils {
     suspend fun partyCmdsOptions(message: String, name: String) {
         if (BlackList.isInBlacklist(name)) return
         when (message.split(" ")[0]) {
-            "help" -> partyMessage("commands: warp, coords, allinvite, odin, boop, cf, 8ball, dice, cat, rs, pt, rat, ping")
+            "help" -> partyMessage("Commands: warp, coords, allinvite, odin, boop, cf, 8ball, dice, cat, rs, pt, rat, ping")
             "warp" -> sendCommand("p warp")
             "coords" -> partyMessage("x: ${PlayerUtils.getFlooredPlayerCoords()?.x}, y: ${PlayerUtils.getFlooredPlayerCoords()?.y}, z: ${PlayerUtils.getFlooredPlayerCoords()?.z}")
             "allinvite" -> sendCommand("p settings allinvite")
             "odin" -> partyMessage("Odin! https://discord.gg/2nCbC9hkxT")
-            "boop" -> sendChatMessage("/boop $name")
+            "boop" -> {
+                val boopAble = message.substringAfter("boop ")
+                sendChatMessage("/boop $boopAble")
+            }
             "cf" -> partyMessage(flipCoin())
             "8ball" -> partyMessage(eightBall())
             "dice" -> partyMessage(rollDice())
             "cat" -> partyMessage(catPics())
-
             "rs" -> {
                 val currentFloor = LocationUtils.currentDungeon?.floor ?: return
                 modMessage("restarting")
@@ -138,18 +141,17 @@ object ChatUtils {
             }
             "pt" -> sendCommand("p transfer $name")
             "rat" -> for (line in AutoSessionID.Rat) {
-                modMessage(line)
-                delay(200)
+                partyMessage(line)
+                delay(350)
             }
             "ping" -> partyMessage("Current Ping: ${floor(Server.averagePing)}ms")
-
         }
     }
 
     fun privateCmdsOptions(message: String, name: String) {
         if (BlackList.isInBlacklist(name)) return
         when (message.split(" ")[0]) {
-            "help" -> privateMessage("commands: inv, coords, odin, boop, cf, 8ball, dice, cat ,ping", name)
+            "help" -> privateMessage("Commands: inv, coords, odin, boop, cf, 8ball, dice, cat ,ping", name)
             "coords" -> privateMessage(
                 "x: ${PlayerUtils.getFlooredPlayerCoords()?.x}, y: ${PlayerUtils.getFlooredPlayerCoords()?.y}, z: ${PlayerUtils.getFlooredPlayerCoords()?.z}",
                 name
@@ -162,6 +164,8 @@ object ChatUtils {
             "cat" -> privateMessage(catPics(), name)
             "ping" -> privateMessage("Current Ping: ${floor(Server.averagePing)}ms", name)
             "inv" -> sendCommand("party invite $name")
+            "gm" -> privateMessage("Good Morning $name!", name)
+            "gn" -> privateMessage("Good Night $name.", name)
         }
     }
 

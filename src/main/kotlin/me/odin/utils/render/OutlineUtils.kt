@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.OpenGlHelper
 import net.minecraft.client.shader.Framebuffer
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
 import org.lwjgl.opengl.EXTFramebufferObject
 import org.lwjgl.opengl.EXTPackedDepthStencil
 import org.lwjgl.opengl.GL11
@@ -21,7 +22,7 @@ import java.awt.Color
 object OutlineUtils {
     private fun outlineEntity(
         model: ModelBase,
-        entity: Entity?,
+        livingBase: EntityLivingBase?,
         limbSwing: Float,
         limbSwingAmount: Float,
         ageInTicks: Float,
@@ -29,12 +30,15 @@ object OutlineUtils {
         headPitch: Float,
         scaleFactor: Float,
         color: Color,
-        thickness: Float
+        thickness: Float,
+        shouldCancelHurt: Boolean
     ) {
         val fancyGraphics: Boolean = mc.gameSettings.fancyGraphics
         val gamma: Float = mc.gameSettings.gammaSetting
         mc.gameSettings.fancyGraphics = false
         mc.gameSettings.gammaSetting = Float.MAX_VALUE
+        if (shouldCancelHurt) livingBase?.hurtTime = 0
+        val entity = livingBase as? Entity
         GlStateManager.resetColor()
         setColor(color)
         renderOne(thickness)
@@ -87,7 +91,7 @@ object OutlineUtils {
         mc.gameSettings.gammaSetting = gamma
     }
 
-    fun outlineEntity(event: RenderEntityModelEvent, thickness: Float, color: Color) {
+    fun outlineEntity(event: RenderEntityModelEvent, thickness: Float, color: Color, shouldCancelHurt: Boolean) {
         outlineEntity(
             event.model,
             event.entity,
@@ -98,7 +102,8 @@ object OutlineUtils {
             event.headPitch,
             event.scaleFactor,
             color,
-            thickness
+            thickness,
+            shouldCancelHurt
         )
     }
 

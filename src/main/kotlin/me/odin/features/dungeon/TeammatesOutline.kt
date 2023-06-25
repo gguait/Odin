@@ -24,7 +24,8 @@ object TeammatesOutline {
         OutlineUtils.outlineEntity(
             event,
             config.teammateThickness,
-            color
+            color,
+            false
         )
     }
 

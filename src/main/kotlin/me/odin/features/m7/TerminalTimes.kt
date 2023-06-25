@@ -49,7 +49,6 @@ object TerminalTimes {
 
         terminalNames.forEach { name ->
             if (chestName.startsWith(name)) {
-                modMessage("entered $name")
                 inTerm = true
                 currentTerminal = chestName
                 timer = System.currentTimeMillis()
@@ -61,8 +60,18 @@ object TerminalTimes {
     fun onClientChatReceived(event: ClientChatReceivedEvent) {
         if (!config.termTimer) return
         val message = stripControlCodes(event.message.unformattedText)
-        val match = Regex("(.+) (?:activated|completed) a terminal! \\(\\d/\\d\\)").find(message) ?: return
-        val name = match.groups[1]?.value
+        val match = Regex("(.+) (?:activated|completed) a terminal! \\((\\d)/(\\d)\\)").find(message) ?: return
+        val (_, name, current, max) = match.groups.map { it?.value }
+
+        if (current?.toInt() == max?.toInt() || current?.toInt() == 0) {
+            if (name != mc.thePlayer.name) {
+                // Gate opened and not by player
+                inTerm = false
+                currentTerminal = ""
+                return
+            }
+        }
+
         if (name != mc.thePlayer.name) return
         inTerm = false
         val time = (System.currentTimeMillis() - timer) / 1000.0

@@ -9,7 +9,7 @@ import cc.polyfrost.oneconfig.config.data.ModType
 import me.odin.Odin.Companion.miscConfig
 import me.odin.hud.*
 
-object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/OdinLogoBig.png"), "odin.json") {
+object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/logo.png"), "odin.json") {
 
     fun init() {
         initialize()
@@ -148,8 +148,17 @@ object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/OdinLogoB
     var frontCamera = true
 
     @Switch(
+        name = "Attunement Colored",
+        description = "Color the mobs based on their attunement, looks worse, but is more useful",
+        category = "General",
+        subcategory = "Blaze Slayer",
+        size = 2
+    )
+    var atunementColored = false
+
+    @Switch(
         name = "Attunement Outline",
-        description = "Attunement Outline",
+        description = "Attunement Outline, looks better, but is harder to see",
         category = "General",
         subcategory = "Blaze Slayer",
         size = 2
@@ -165,6 +174,52 @@ object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/OdinLogoB
         max = 20f
     )
     var atunementOutlineThickness = 5f
+
+    @Switch(
+        name = "Attunement Cancel Hurt Effect",
+        description = "Cancels the hurt effect of the entity, if this is disabled the outline will get discolored when the entity is hurt",
+        category = "General",
+        subcategory = "Blaze Slayer",
+        size = 2
+    )
+    var atunementCancelHurt = true
+
+    @Switch(
+        name = "Arrow Trajectory",
+        description = "Shows arrow trajectory",
+        category = "General",
+        subcategory = "Arrow Trajectory",
+        size = 2
+    )
+    var arrowTrajectory = false
+
+    @Slider(
+        name = "Arrow Trajectory Thickness",
+        description = "Arrow Trajectory Thickness",
+        category = "General",
+        subcategory = "Arrow Trajectory",
+        min = 5f,
+        max = 20f
+    )
+    var arrowTrajectoryThickness = 6f
+
+    @Color(
+        name = "Arrow Trajectory Color",
+        description = "Arrow Trajectory Color",
+        category = "General",
+        subcategory = "Arrow Trajectory"
+    )
+    var arrowTrajectoryColor = OneColor(255, 0, 0)
+
+    @Slider(
+        name = "Arrow Trajectory Box Size",
+        description = "Arrow Trajectory Box Size",
+        category = "General",
+        subcategory = "Arrow Trajectory",
+        min = 0.5f,
+        max = 3f
+    )
+    var arrowTrajectoryBoxSize = 1f
 
     @Switch(
         name = "You can add whatever mob you want into the list /highlight",
@@ -192,6 +247,15 @@ object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/OdinLogoB
         subcategory = "Highlight"
     )
     var highlightColor = OneColor(255, 255, 255)
+
+    @Switch(
+        name = "Cancel Hurt Effect",
+        description = "Cancels the hurt effect of the entity, if this is disabled the outline will get discolored when the entity is hurt",
+        category = "General",
+        subcategory = "Highlight",
+        size = 2
+    )
+    var highlightCancelHurt = false
 
     @Button(
         name = "Adds the star mob star to your highlights list so all star mobs are highlighted",
@@ -291,15 +355,6 @@ object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/OdinLogoB
     var dragonBoxesLineWidth = 2f
 
     @Switch(
-        name = "Shows where to decoy and gyro in p5",
-        description = "Shows where to decoy and gyro in p5",
-        category = "M7",
-        subcategory = "Phase5 Waypoints",
-        size = 2
-    )
-    var p5Waypoint = false
-
-    @Switch(
         name = "Shows how long a terminal took to complete",
         description = "Shows how long a terminal took to complete",
         category = "M7",
@@ -370,34 +425,6 @@ object OdinConfig : Config(Mod("Odin", ModType.SKYBLOCK, "/assets/odin/OdinLogoB
         subcategory = "Gyro Range"
     )
     var gyroColor = OneColor(192, 64, 192, 128)
-
-
-    @Switch(
-        name = "Chat in portal",
-        description = "Chat in portal",
-        category = "QOL",
-        subcategory = "Portal",
-        size = 2
-    )
-    var portalFix = false
-
-    @Switch(
-        name = "Blocks annoying abiphone calls",
-        description = "Blocks annoying abiphone calls",
-        category = "QOL",
-        subcategory = "Abiphone Blocker",
-        size = 2
-    )
-    var abiphoneBlocker = false
-
-    @Switch(
-        name = "Toggle Sprint",
-        description = "Toggle Sprint",
-        category = "QOL",
-        subcategory = "Auto Sprint",
-        size = 2
-    )
-    var autoSprint = false
 
     @Switch(
         name = "Automatically alerts when your hype is broken",
