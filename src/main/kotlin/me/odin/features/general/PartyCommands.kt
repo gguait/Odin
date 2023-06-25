@@ -37,12 +37,11 @@ object PartyCommands {
     fun dt(event: ClientChatReceivedEvent) {
         if (!config.partyCommands) return
         val message = StringUtils.stripControlCodes(event.message.unformattedText)
-        if (!message.contains("EXTRA STATS") && !dtToggle) return
+        if (!message.contains("EXTRA STATS") || ChatUtils.dtPlayer == null) return
         GlobalScope.launch{
             delay(2500)
             PlayerUtils.alert("§c${ChatUtils.dtPlayer} needs downtime")
             ChatUtils.partyMessage("${ChatUtils.dtPlayer} needs downtime")
-            dtToggle = true
             ChatUtils.dtPlayer = null
         }
     }
