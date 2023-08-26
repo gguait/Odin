@@ -135,7 +135,7 @@ class Odin {
     companion object {
         const val MOD_ID = "Odin"
         const val NAME = "Odin"
-        const val VERSION = "1.0.1"
+        const val VERSION = "1.0.2"
 
         val mc: Minecraft = Minecraft.getMinecraft()
 
