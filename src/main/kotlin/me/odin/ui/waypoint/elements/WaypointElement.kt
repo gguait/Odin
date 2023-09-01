@@ -5,33 +5,35 @@ import cc.polyfrost.oneconfig.utils.dsl.VG
 import cc.polyfrost.oneconfig.utils.dsl.drawRoundedRect
 import cc.polyfrost.oneconfig.utils.dsl.drawSVG
 import cc.polyfrost.oneconfig.utils.dsl.nanoVG
-import me.odin.features.general.WaypointManager
-import me.odin.features.general.WaypointManager.Waypoint
+import me.odin.features.impl.render.WaypointManager
+import me.odin.features.impl.render.WaypointManager.Waypoint
 import me.odin.ui.waypoint.WaypointGUI
 import me.odin.ui.waypoint.WaypointGUI.mouseHandler
-import me.odin.utils.gui.animations.ColorAnimation
-import net.minecraft.util.StringUtils
-import java.awt.Color
+import me.odin.utils.Utils.noControlCodes
+import me.odin.utils.render.Color
+import me.odin.utils.render.gui.animations.impl.ColorAnimation
 
 class WaypointElement(val waypoint: Waypoint) {
-    private val name get() = StringUtils.stripControlCodes(waypoint.name)
+    private val name get() = waypoint.name.noControlCodes
     private val colorAnimation = ColorAnimation(150)
     var y = 0f
 
     private val inputFields = arrayOf(
-        InputField(name, mouseHandler, 12f, Fonts.REGULAR),
-        InputField(waypoint.x, "x:", mouseHandler, 10f, Fonts.REGULAR),
-        InputField(waypoint.y, "y:", mouseHandler, 10f, Fonts.REGULAR),
-        InputField(waypoint.z, "z:", mouseHandler, 10f, Fonts.REGULAR),
+        WaypointInputField(name, mouseHandler, 12f, Fonts.REGULAR),
+        WaypointInputField(waypoint.x, "x:", mouseHandler, 10f, Fonts.REGULAR),
+        WaypointInputField(waypoint.y, "y:", mouseHandler, 10f, Fonts.REGULAR),
+        WaypointInputField(waypoint.z, "z:", mouseHandler, 10f, Fonts.REGULAR),
     )
 
     fun drawScreen(vg: VG): Int {
         nanoVG(vg.instance) {
-            drawRoundedRect(15, y, 450, 30, 5f, Color(13, 14, 15).rgb)
+            drawRoundedRect(15, y, 450, 30, 5f, Color(13, 14, 15).rgba)
 
-            val color = colorAnimation.getValue(waypoint.color, Color(21, 22, 23), waypoint.shouldShow).rgb
+            val color = colorAnimation.get(waypoint.color, Color(21, 22, 23), waypoint.shouldShow).rgba
             drawRoundedRect(20, y + 6, 18, 18, 5f, color)
-            drawSVG("/assets/odin/trash.svg", 442, y + 6, 18, 18, -1, 100, javaClass) // get better svg it looks so pixelated
+
+            val trashColor = if (mouseHandler.isAreaHovered(442f, y + 6, 18f, 18f)) Color(192, 192, 192).rgba else -1
+            drawSVG("/assets/odin/ui/waypoint/trash.svg", 442, y + 6, 18, 18, trashColor, 100, javaClass) // get better svg it looks so pixelated
 
             var currentX = 40f
             for (i in inputFields) {

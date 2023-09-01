@@ -4,12 +4,22 @@
   "minVersion": "0.7",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinNetworkManager"
+    "MixinChunk",
+    "MixinNetworkManager",
+    "MixinS1CPacketEntityMetadata",
+    "MixinWorld"
   ],
   "client": [
+    "MinecraftAccessor",
+    "MixinFontRenderer",
+    "MixinGuiContainer",
+    "MixinMinecraft",
     "MixinModList",
     "MixinMouseHelper",
     "MixinNetworkManager",
-    "MixinRendererLivingEntity"
+    "MixinRender",
+    "MixinRendererLivingEntity",
+    "model.MixinModelBiped",
+    "model.MixinModelBlaze"
   ]
 }

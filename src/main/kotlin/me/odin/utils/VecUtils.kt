@@ -1,10 +1,12 @@
 package me.odin.utils
 
 import me.odin.Odin.Companion.mc
+import me.odin.utils.Utils.floor
 import net.minecraft.entity.Entity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
+import net.minecraft.util.Vec3i
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -27,6 +29,9 @@ object VecUtils {
         return if (mc.thePlayer?.isSneaking == true) 1.54f else 1.62f
     }
 
+    fun isFacingAABB(aabb: AxisAlignedBB, range: Float): Boolean {
+        return isInterceptable(aabb, range)
+    }
 
     private fun isInterceptable(aabb: AxisAlignedBB, range: Float): Boolean {
         val player = mc.thePlayer ?: return false
@@ -60,10 +65,25 @@ object VecUtils {
     private fun isVecInYZ(vec: Vec3, aabb: AxisAlignedBB): Boolean =
         vec.yCoord in aabb.minY..aabb.maxY && vec.zCoord in aabb.minZ..aabb.maxZ
 
-
     private fun isVecInXZ(vec: Vec3, aabb: AxisAlignedBB): Boolean =
         vec.xCoord in aabb.minX..aabb.maxX && vec.zCoord in aabb.minZ..aabb.maxZ
 
     private fun isVecInXY(vec: Vec3, aabb: AxisAlignedBB): Boolean =
         vec.xCoord in aabb.minX..aabb.maxX && vec.yCoord in aabb.minY..aabb.maxY
+
+    operator fun Vec3.plus(vec3: Vec3): Vec3 {
+        return this.add(vec3)
+    }
+
+    fun Vec3.addVec(x: Double = .0, y: Double = .0, z: Double = .0): Vec3 {
+        return this.addVector(x, y, z)
+    }
+
+    fun Vec3.floored(): Vec3i {
+        return Vec3i(xCoord.floor(), yCoord.floor(), zCoord.floor())
+    }
+
+    fun scale(vec3: Vec3i,scale: Float): Vec3 {
+        return Vec3((vec3.x * scale).toDouble(), (vec3.y* scale).toDouble(), (vec3.z * scale).toDouble())
+    }
 }

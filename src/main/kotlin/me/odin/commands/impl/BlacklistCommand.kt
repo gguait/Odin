@@ -1,44 +1,55 @@
 package me.odin.commands.impl
 
 import me.odin.Odin.Companion.miscConfig
-import me.odin.commands.Command
+import me.odin.commands.AbstractCommand
 import me.odin.utils.skyblock.ChatUtils.modMessage
 
-object BlacklistCommand : Command("blacklist", listOf("odblacklist")) {
-    override fun executeCommand(args: Array<String>) {
-        if (args.isEmpty())
+object BlacklistCommand : AbstractCommand("blacklist", "odblacklist", description = "Command for Blacklist.") {
+    init {
+        empty {
             modMessage("§cArguments empty. §fUsage: add, remove, clear, list")
-        else {
-            when (args[0]) {
-                "add" -> {
-                    if (args.size == 1) return modMessage("You need to name someone to add to the Blacklist.")
-                    val playerName = args[1].lowercase()
-                    if (miscConfig.blacklist.contains(playerName)) return modMessage("§7$playerName §ris already in the Blacklist.")
+        }
 
-                    modMessage("Added §7$playerName §rto Blacklist.")
-                    miscConfig.blacklist.add(playerName)
-                    miscConfig.saveAllConfigs()
-                }
+        "add" {
+            does {
+                if (it.isEmpty()) return@does modMessage("You need to name someone to add to the Blacklist.")
+                val name = it[0]
+                if (name !in miscConfig.blacklist) return@does modMessage("$name is already in the Blacklist.")
 
-                "remove" -> {
-                    if (args.size == 1) return modMessage("You need to name someone to remove from the Blacklist.")
-                    val playerName = args[1]
-                    if (!miscConfig.blacklist.contains(playerName)) return modMessage("§7$playerName §risn't in the Blacklist.")
-
-                    modMessage("Removed §7$playerName §rfrom Blacklist.")
-                    miscConfig.blacklist.remove(playerName)
-                    miscConfig.saveAllConfigs()
-                }
-
-                "clear" -> {
-                    modMessage("Blacklist cleared.")
-                    miscConfig.blacklist.clear()
-                    miscConfig.saveAllConfigs()
-                }
-
-                "list" -> miscConfig.blacklist.forEach { modMessage(it) }
-                else -> modMessage("Blacklist incorrect usage. Usage: add, remove, clear, list")
+                modMessage("Added $name to Blacklist.")
+                miscConfig.blacklist.add(name)
+                miscConfig.saveAllConfigs()
             }
+        }
+
+        "remove" {
+            does {
+                if (it.isEmpty()) return@does modMessage("You need to name someone to remove from the Blacklist.")
+                val name = it[0]
+                if (name !in miscConfig.blacklist) return@does modMessage("$name isn't in the Blacklist.")
+
+                modMessage("Removed $name from Blacklist.")
+                miscConfig.blacklist.remove(name)
+                miscConfig.saveAllConfigs()
+            }
+        }
+
+        "clear" {
+            does {
+                modMessage("Blacklist cleared.")
+                miscConfig.blacklist.clear()
+                miscConfig.saveAllConfigs()
+            }
+        }
+
+        "list" {
+            does {
+                miscConfig.blacklist.forEach { modMessage(it) }
+            }
+        }
+
+        orElse {
+            modMessage("Blacklist incorrect usage. Usage: add, remove, clear, list")
         }
     }
 }

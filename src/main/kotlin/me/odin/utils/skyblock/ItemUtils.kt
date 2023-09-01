@@ -1,46 +1,41 @@
+
 package me.odin.utils.skyblock
 
-import cc.polyfrost.oneconfig.libs.universal.ChatColor.Companion.stripControlCodes
 import me.odin.Odin.Companion.mc
+import me.odin.utils.Utils.noControlCodes
+import net.minecraft.inventory.ContainerChest
 import net.minecraft.item.ItemStack
-import net.minecraft.util.StringUtils
+import net.minecraft.nbt.NBTTagCompound
 import java.awt.Color
 
 object ItemUtils {
 
-    fun getItemSlot(item: String, ignoreCase: Boolean = true): Int =
-        List(35) { mc.thePlayer.inventory.getStackInSlot(it) }
-            .indexOfFirst { i -> i?.displayName?.contains(item, ignoreCase) == true }
-
-    val ItemStack.itemID: String
+    /**
+     * Returns the ExtraAttribute Compound
+     */
+    private val ItemStack.extraAttributes: NBTTagCompound?
         get() {
-            if (this.hasTagCompound() && this.tagCompound.hasKey("ExtraAttributes")) {
-                val attributes = this.getSubCompound("ExtraAttributes", false)
-                if (attributes.hasKey("id", 8)) {
-                    return attributes.getString("id")
-                }
-            }
-            return ""
+            return this.getSubCompound("ExtraAttributes", false)
         }
 
+    /**
+     * Returns displayName without control codes.
+     */
+    private val ItemStack.unformattedName: String
+        get() = this.displayName.noControlCodes
 
+    /**
+     * Returns Item ID for an Item
+     */
+    val ItemStack.itemID: String
+        get() = this.extraAttributes?.getString("id") ?: ""
 
+    inline val heldItem: ItemStack?
+        get() = mc.thePlayer?.heldItem
 
-    fun getItemIndexInInventory(item: String, contains: Boolean): Int {
-        val inventory = mc.thePlayer.inventory.mainInventory
-        for (i in inventory.indices) {
-            val itemStack: ItemStack = inventory[i] ?: continue
-            return if (
-                if (contains)
-                    StringUtils.stripControlCodes(itemStack.displayName).contains(item)
-                else
-                    StringUtils.stripControlCodes(itemStack.displayName) == item
-            )  i
-            else continue
-        }
-        return -1
-    }
-
+    /**
+     * Returns the lore for an Item
+     */
     val ItemStack.lore: List<String>
         get() = this.tagCompound?.getCompoundTag("display")?.getTagList("Lore", 8)?.let {
             val list = mutableListOf<String>()
@@ -50,6 +45,27 @@ object ItemUtils {
             list
         } ?: emptyList()
 
+
+    /**
+     * Returns first slot of an Item
+     */
+    fun getItemSlot(item: String, ignoreCase: Boolean = true): Int? {
+        val index = mc.thePlayer.inventory.mainInventory.indexOfFirst {
+            it?.unformattedName?.contains(item, ignoreCase) == true
+        }
+        return index.takeIf { it != -1 }
+    }
+
+    /**
+     * Gets index of an item in a chest.
+     * @return null if not found.
+     * @return null
+     */
+    fun getItemIndexInContainerChest(container: ContainerChest, item: String, ignoreCase: Boolean): Int? {
+        return container.inventorySlots.subList(0, container.inventory.size - 36).firstOrNull {
+            it.stack?.unformattedName?.contains(item, ignoreCase) == true
+        }?.slotNumber
+    }
 
     enum class ItemRarity(
         val loreName: String,
@@ -67,23 +83,16 @@ object ItemUtils {
         VERY_SPECIAL("VERY SPECIAL", "§c", Color.RED);
     }
 
-    private val rarityRegex: Regex =
-        Regex("§l(?<rarity>[A-Z]+) ?(?<type>[A-Z ]+)?(?:§[0-9a-f]§l§ka)?$")
-    /**
-     * Returns the rarity of a Skyblock item given its lore. This method takes the item's lore as a string list as input.
-     * This method is split up from the method that takes the `ItemStack` instance for easier unit testing.
-     *
-     * @param lore the `List<String>` containing the item's lore
-     * @return the rarity of the item if a valid rarity is found, or `null` if item is `null` or no valid rarity is found
-     */
-     fun getRarity(lore: List<String>): ItemRarity? {
+    private val rarityRegex: Regex = Regex("§l(?<rarity>[A-Z]+) ?(?<type>[A-Z ]+)?(?:§[0-9a-f]§l§ka)?$")
+
+    fun getRarity(lore: List<String>): ItemRarity? {
         // Start from the end since the rarity is usually the last line or one of the last.
         for (i in lore.indices.reversed()) {
             val currentLine = lore[i]
             val match = rarityRegex.find(currentLine) ?: continue
             val rarity: String = match.groups["rarity"]?.value ?: continue
             for (itemRarity in ItemRarity.values()) {
-                if (stripControlCodes(currentLine)?.startsWith(itemRarity.loreName) == true) {
+                if (currentLine.noControlCodes.startsWith(itemRarity.loreName)) {
                     return itemRarity
                 }
             }

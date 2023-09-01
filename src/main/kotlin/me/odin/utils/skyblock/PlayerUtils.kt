@@ -1,31 +1,45 @@
 package me.odin.utils.skyblock
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import me.odin.Odin.Companion.mc
+import me.odin.utils.AsyncUtils
+import me.odin.utils.VecUtils.floored
+import me.odin.utils.skyblock.ChatUtils.modMessage
+import me.odin.utils.skyblock.ItemUtils.getItemIndexInContainerChest
+import me.odin.utils.skyblock.ItemUtils.getItemSlot
+import net.minecraft.client.gui.inventory.GuiChest
+import net.minecraft.client.settings.KeyBinding
+import net.minecraft.inventory.ContainerChest
+import net.minecraft.util.BlockPos
 import net.minecraft.util.Vec3
 import net.minecraft.util.Vec3i
-import kotlin.math.floor
+import net.minecraftforge.client.event.GuiOpenEvent
+
 
 object PlayerUtils {
 
-    fun getFlooredPlayerCoords(): Vec3i? =
-        if (mc.thePlayer == null) null
-        else mc.thePlayer.positionVector.floored()
-        //else Vec3i(floor(mc.thePlayer.posX), floor(mc.thePlayer.posY), floor(mc.thePlayer.posZ))
-
-    fun Vec3.floored() = Vec3i(floor(this.xCoord), floor(this.yCoord), floor(this.zCoord))
-
-    fun removeSymbols(input: String): String = input.replace(Regex("[^a-zA-Z0-9 ]"), "")
-
-
-    private fun playSound(name: String, volume: Float, pitch: Float) = mc.thePlayer.playSound(name, volume, pitch)
-
-    fun alert(title: String, playSound: Boolean = true) {
-        if (playSound) playSound("note.pling", 100F, 1F)
-        mc.ingameGUI.displayTitle(title, "", 10, 150, 10)
+    /**
+     * Right-clicks the next tick
+     */
+    fun rightClick() {
+        KeyBinding.onTick(-99) // Simple way of making completely sure the right-clicks are sent at the same time as vanilla ones.
     }
 
 
-    val posX get() = mc.thePlayer.posX
-    val posY get() = mc.thePlayer.posY
-    val posZ get() = mc.thePlayer.posZ
+    fun alert(title: String, playSound: Boolean = true) {
+        if (playSound) mc.thePlayer.playSound("note.pling", 100f, 1f)
+        mc.ingameGUI.run {
+            displayTitle(title, null, 10, 250, 10)
+            displayTitle(null, "", 10, 250, 10)
+            displayTitle(null, null, 10, 250, 10)
+        }
+    }
+
+    fun getFlooredPlayerCoords(): Vec3i = mc.thePlayer.positionVector.floored()
+
+    inline val posX get() = mc.thePlayer.posX
+    inline val posY get() = mc.thePlayer.posY
+    inline val posZ get() = mc.thePlayer.posZ
 }

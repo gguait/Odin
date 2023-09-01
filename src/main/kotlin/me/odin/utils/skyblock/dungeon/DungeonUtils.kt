@@ -1,24 +1,32 @@
 package me.odin.utils.skyblock.dungeon
 
-import me.odin.utils.Wrappers
+import com.google.common.collect.ComparisonChain
+import me.odin.Odin.Companion.mc
+import me.odin.events.impl.ReceivePacketEvent
+import me.odin.utils.Utils.noControlCodes
+import me.odin.utils.clock.Executor
+import me.odin.utils.clock.Executor.Companion.register
+import me.odin.utils.render.Color
 import me.odin.utils.skyblock.ItemUtils
 import me.odin.utils.skyblock.LocationUtils
 import me.odin.utils.skyblock.LocationUtils.currentDungeon
-import me.odin.utils.skyblock.PlayerUtils
-import me.odin.utils.skyblock.ScoreboardUtils
+import me.odin.utils.skyblock.PlayerUtils.posY
+import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.StringUtils
+import net.minecraft.network.play.server.S02PacketChat
+import net.minecraft.world.WorldSettings
+import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent
-import java.awt.Color
 
-object DungeonUtils : Wrappers() {
+object DungeonUtils {
 
-    val inDungeons
-        get() = LocationUtils.inSkyblock && currentDungeon != null
+    inline val inDungeons get() =
+        LocationUtils.inSkyblock && currentDungeon != null
 
-    val inBoss
-        get() = currentDungeon?.inBoss ?: false
+    inline val inBoss get() =
+        currentDungeon?.inBoss ?: false
+
+    private var inp5 = false
 
     fun isFloor(vararg options: Int): Boolean {
         for (option in options) {
@@ -35,45 +43,81 @@ object DungeonUtils : Wrappers() {
             posY > 155 -> 2
             posY > 100 -> 3
             posY > 45 -> 4
-            else -> if (currentDungeon?.floor == Dungeon.Floor.M7) 5 else 4
+            else -> 5
         }
     }
 
     enum class Classes(
-        val letter: String,
         val code: String,
         val color: Color
     ) {
-        ARCHER("A", "§6", Color(255, 170, 0)),
-        MAGE("M", "§5", Color(170, 0, 170)),
-        BERSERKER("B", "§4", Color(170, 0, 0)),
-        HEALER("H", "§a", Color(85, 255, 85)),
-        TANK("T", "§2", Color(0, 170, 0))
+        Archer("§6", Color(255, 170, 0)),
+        Mage("§5", Color(170, 0, 170)),
+        Berserker("§4", Color(170, 0, 0)),
+        Healer("§a", Color(85, 255, 85)),
+        Tank("§2", Color(0, 170, 0))
     }
-    val isGhost: Boolean get() = ItemUtils.getItemIndexInInventory("Haunt", true) != -1
+    val isGhost: Boolean get() = ItemUtils.getItemSlot("Haunt", true) != null
     var teammates: List<Pair<EntityPlayer, Classes>> = emptyList()
-    private var lastUpdate: Long = System.currentTimeMillis()
+
+    init {
+        Executor(1000) { if (inDungeons) teammates = getDungeonTeammates() }.register()
+    }
 
     @SubscribeEvent
-    fun onClientTick(event: TickEvent.ClientTickEvent) {
-        if (!inDungeons || System.currentTimeMillis() - lastUpdate < 1000) return
-        teammates = getDungeonTeammates()
-        lastUpdate += 1000
+    fun onPacket(event: ReceivePacketEvent) {
+        if (event.packet !is S02PacketChat) return
+        val message = event.packet.chatComponent.unformattedText.noControlCodes
+        if (message == "[BOSS] Wither King: You.. again?") {
+            inp5 = true
+        }
     }
 
-    private fun getDungeonTeammates(): List<Pair<EntityPlayer, Classes>> {
-        val temp = mutableListOf<Pair<EntityPlayer, Classes>>()
-        ScoreboardUtils.sidebarLines.forEach {
-            val line = StringUtils.stripControlCodes(it)
-            if (!line.startsWith("[")) return@forEach
-            val symbol = line[1].toString()
-            val name = PlayerUtils.removeSymbols(line.split(" ")[1])
-            mc.theWorld.playerEntities.find { player ->
-                player.name == name && player != mc.thePlayer
-            }?.let { a ->
-                temp.add(Pair(a, Classes.values().find { classes -> classes.letter == symbol }!!))
-            }
-        }
-        return temp
+    @SubscribeEvent
+    fun onWorldLoad(event: WorldEvent.Load) {
+        inp5 = false
     }
+    private val tablistRegex = Regex("^\\[(\\d+)] (?:\\[\\w+] )*(\\w+) (?:.)*?\\((\\w+)(?: (\\w+))*\\)\$")
+
+    private fun getDungeonTeammates(): List<Pair<EntityPlayer, Classes>> {
+        val teammates = mutableListOf<Pair<EntityPlayer, Classes>>()
+        getDungeonTabList()?.forEach { (_, line) ->
+
+            val match = tablistRegex.matchEntire(line.noControlCodes) ?: return@forEach
+            val (_, sbLevel, name, clazz, level) = match.groupValues
+            if (name == mc.thePlayer.name) return@forEach
+            mc.theWorld.playerEntities.find { player ->
+                player.name == name
+            }?.let { player ->
+                teammates.add(Pair(player, Classes.entries.find { classes -> classes.name == clazz }!!))
+            }
+
+        }
+        //ChatUtils.modMessage(teammates)
+        return teammates
+    }
+
+    private fun getDungeonTabList(): List<Pair<NetworkPlayerInfo, String>>? {
+        val tabEntries = tabList
+        if (tabEntries.size < 18 || !tabEntries[0].second.contains("§r§b§lParty §r§f(")) {
+            return null
+        }
+        return tabEntries
+    }
+
+    private val tabListOrder = Comparator<NetworkPlayerInfo> { o1, o2 ->
+        if (o1 == null) return@Comparator -1
+        if (o2 == null) return@Comparator 0
+        return@Comparator ComparisonChain.start().compareTrueFirst(
+            o1.gameType != WorldSettings.GameType.SPECTATOR,
+            o2.gameType != WorldSettings.GameType.SPECTATOR
+        ).compare(
+            o1.playerTeam?.registeredName ?: "",
+            o2.playerTeam?.registeredName ?: ""
+        ).compare(o1.gameProfile.name, o2.gameProfile.name).result()
+    }
+
+    val tabList: List<Pair<NetworkPlayerInfo, String>>
+        get() = (mc.thePlayer?.sendQueue?.playerInfoMap?.sortedWith(tabListOrder) ?: emptyList())
+            .map { Pair(it, mc.ingameGUI.tabList.getPlayerName(it)) }
 }

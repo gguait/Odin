@@ -3,39 +3,43 @@ package me.odin.ui.waypoint
 import cc.polyfrost.oneconfig.renderer.NanoVGHelper
 import cc.polyfrost.oneconfig.renderer.font.Fonts
 import cc.polyfrost.oneconfig.utils.dsl.*
-import me.odin.Odin.Companion.waypointConfig
-import me.odin.features.general.WaypointManager
+import me.odin.commands.impl.WaypointCommand.randomColor
+import me.odin.config.WaypointConfig
+import me.odin.features.impl.render.WaypointManager
 import me.odin.ui.waypoint.elements.AreaButton
 import me.odin.ui.waypoint.elements.WaypointElement
-import me.odin.utils.gui.GuiUtils.scaleFactor
-import me.odin.utils.gui.GuiUtils.scaleWithMouse
-import me.odin.utils.gui.GuiUtils.scaledHeight
-import me.odin.utils.gui.GuiUtils.scaledWidth
-import me.odin.utils.gui.GuiUtils.scissor
-import me.odin.utils.gui.GuiUtils.translateWithMouse
-import me.odin.utils.gui.MouseHandler
-import me.odin.utils.gui.animations.EaseInOut
-import me.odin.utils.gui.animations.LinearAnimation
+import me.odin.utils.VecUtils.floored
+import me.odin.utils.render.Color
+import me.odin.utils.render.gui.GuiUtils.scaleFactor
+import me.odin.utils.render.gui.GuiUtils.scaleWithMouse
+import me.odin.utils.render.gui.GuiUtils.scaledHeight
+import me.odin.utils.render.gui.GuiUtils.scaledWidth
+import me.odin.utils.render.gui.GuiUtils.scissor
+import me.odin.utils.render.gui.GuiUtils.translateWithMouse
+import me.odin.utils.render.gui.MouseHandler
+import me.odin.utils.render.gui.animations.impl.EaseInOut
+import me.odin.utils.render.gui.animations.impl.LinearAnimation
 import me.odin.utils.skyblock.LocationUtils.currentArea
-import me.odin.utils.skyblock.PlayerUtils.floored
 import net.minecraft.client.gui.GuiScreen
 import org.lwjgl.input.Mouse
-import java.awt.Color
 import java.io.IOException
-import java.util.*
 import kotlin.math.sign
 
+/**
+ * (not proud of this one ngl. its ass and rushed)
+ * @author Stivais
+ */
 object WaypointGUI : GuiScreen() {
     var displayArea: String? = null // rename
     var list = mutableListOf<WaypointElement>()
 
     private var scrollTarget = 0f // idk a better name
     private var scrollOffset = 0f
-    private val scrollAnimation = LinearAnimation(200)
+    private val scrollAnimation = LinearAnimation<Float>(200)
 
     private var areaTarget = 10f
     private var areaOffset = 100f
-    private val areaAnimation = LinearAnimation(200)
+    private val areaAnimation = LinearAnimation<Float>(200)
 
     var mouseHandler = MouseHandler()
 
@@ -44,7 +48,7 @@ object WaypointGUI : GuiScreen() {
         displayArea?.let { updateElements(it) }
         scrollTarget = 0f
         scrollOffset = 0f
-        areas = areas.sortedByDescending { waypointConfig.waypoints[it.area]?.size }
+        areas = areas.sortedByDescending { WaypointConfig.waypoints[it.area]?.size }
         super.initGui()
     }
 
@@ -54,15 +58,15 @@ object WaypointGUI : GuiScreen() {
     private var drawingAreas = false
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
-        nanoVG(true) {
-            translateWithMouse(mouseHandler, scaledWidth / 4f, scaledHeight / 4f)
-            scaleWithMouse(mouseHandler, scaleFactor, scaleFactor)
+        nanoVG {
+            translateWithMouse(mouseHandler, scaledWidth / 2f, scaledHeight / 2f)
+            scaleWithMouse(mouseHandler, scaleFactor * 2f, scaleFactor * 2f)
 
             drawDropShadow(0, 0, 480, 264, 10f, 1f, 10f)
-            drawRoundedRectVaried(0, 25, 480, 239, Color(21, 22, 23, 235).rgb, 0, 0, 10, 10)
+            drawRoundedRectVaried(0, 25, 480, 239, Color(21, 22, 23, 0.9f).rgba, 0, 0, 10, 10)
 
             scissor(0f, 25f, 480f, 239f) {
-                scrollOffset = scrollAnimation.getValue(scrollOffset, scrollTarget)
+                scrollOffset = scrollAnimation.get(scrollOffset, scrollTarget)
                 var currentY = 35f - scrollOffset
                 for (waypoint in list) {
                     waypoint.y = currentY
@@ -70,32 +74,38 @@ object WaypointGUI : GuiScreen() {
                 }
             }
 
-            val animY = settingAnimation.getValue(25f, 50f, !settingMenu)
+            val animY = settingAnimation.get(25f, 50f, !settingMenu)
 
-            drawRoundedRectVaried(0, 0, 480, animY, Color(21, 22, 23).rgb, 10, 10, 0, 0)
-            drawLine(0, animY, 480, animY, 1.5, Color(30, 32, 34).rgb)
+            drawRoundedRectVaried(0, 0, 480, animY, Color(21, 22, 23).rgba, 10, 10, 0, 0)
+            drawLine(0, animY, 480, animY, 1.5, Color(30, 32, 34).rgba)
 
-            drawingAreas = animY == 50f
+            drawingAreas = animY != 25f
             if (drawingAreas) {
-                areaOffset = areaAnimation.getValue(areaOffset, areaTarget)
-                var currentX = areaOffset
-                for ((index, area) in areas.withIndex()) {
-                    currentX += area.draw(this, currentX, 39f, index != 0)
+                scissor(0f, 25f, 480f, 50f) {
+
+                    areaOffset = areaAnimation.get(areaOffset, areaTarget)
+
+                    var currentX = areaOffset
+                    for (area in areas) {
+                        area.set(currentX, animY - 11f)
+                        area.draw(this)
+                        currentX += area.draw(this)
+                    }
                 }
             }
 
-            drawRoundedRectVaried(0, 0,  480, 25, Color(21, 22, 23).rgb, 10, 10, 0, 0)
-            drawLine(0, 25, 480, 25, 1.5, Color(30, 32, 34).rgb)
+            drawRoundedRectVaried(0, 0,  480, 25, Color(21, 22, 23).rgba, 10, 10, 0, 0)
+            drawLine(0, 25, 480, 25, 1.5, Color(30, 32, 34).rgba)
 
-            drawText("Add Waypoint", 16, 13.25, Color.LIGHT_GRAY.rgb, 10, Fonts.REGULAR)
+            drawText("Add Waypoint", 16, 13.25, Color(192, 192, 192).rgba, 10, Fonts.REGULAR)
             val buttonColor = if (mouseHandler.isAreaHovered(10f, 5f, 78.5f, 15f)) Color(38, 40, 42) else Color(30, 32, 34)
-            drawHollowRoundedRect(10, 5, 78, 15, 5, buttonColor.rgb, 0.75)
+            drawHollowRoundedRect(10, 5, 78, 15, 5, buttonColor.rgba, 0.75)
 
-            val color = if (mouseHandler.isAreaHovered(455f, 5f, 15f, 15f)) Color.LIGHT_GRAY.rgb else Color.WHITE.rgb
-            NanoVGHelper.INSTANCE.translate(this.instance, 462.5f, 12.5f)
+            val color = if (mouseHandler.isAreaHovered(455f, 5f, 15f, 15f)) Color(192, 192, 192).rgba else -1
+            translate(462.5f, 12.5f)
             NanoVGHelper.INSTANCE.rotate(this.instance, Math.toRadians((animY - 25.0) * 12.0).toFloat())
-            NanoVGHelper.INSTANCE.translate(this.instance, -462.5f, -12.5f)
-            drawSVG("/assets/odin/Settings.svg", 455, 5, 15, 15, color, 36, javaClass)
+            translate(-462.5f, -12.5f)
+            drawSVG("/assets/odin/ui/waypoint/Settings.svg", 455, 5, 15, 15, color, 36, javaClass)
         }
         super.drawScreen(mouseX, mouseY, partialTicks)
     }
@@ -105,7 +115,7 @@ object WaypointGUI : GuiScreen() {
             if (settingAnimation.start()) settingMenu = !settingMenu
             return
         }
-        if (drawingAreas) {
+        if (drawingAreas && mouseHandler.isAreaHovered(0f, 25f, 480f, 25f)) {
             for (area in areas) {
                 if (!area.mouseClicked()) continue
                 displayArea = area.area
@@ -115,8 +125,7 @@ object WaypointGUI : GuiScreen() {
             return
         }
         if (mouseHandler.isAreaHovered(10f, 5f, 78.5f, 15f)) {
-            val randomColor = Random().run { Color(nextInt(255), nextInt(255), nextInt(255)) }
-            val waypoint = WaypointManager.Waypoint("§fWaypoint", mc.thePlayer.positionVector.floored(), randomColor)
+            val waypoint = WaypointManager.Waypoint("§fWaypoint", mc.thePlayer.positionVector.floored(), randomColor())
             WaypointManager.addWaypoint(waypoint, displayArea ?: "")
             list.add(WaypointElement(waypoint))
             return
@@ -136,8 +145,8 @@ object WaypointGUI : GuiScreen() {
         super.handleMouseInput()
         if (Mouse.getEventDWheel() != 0) {
             val amount = Mouse.getEventDWheel().sign * -16
-            if (drawingAreas) {
-                areaTarget = (areaTarget + amount).coerceAtMost(10f).coerceAtLeast(200f - areas.sumOf { it.width.toInt() })
+            if (drawingAreas && mouseHandler.isAreaHovered(0f, 25f, 480f, 25f)) {
+                areaTarget = (areaTarget + amount).coerceAtMost(10f).coerceAtLeast(292f - areas.sumOf { it.width.toInt() })
                 areaAnimation.start(true)
             } else {
                 scrollTarget = (scrollTarget + amount).coerceAtMost(-229 + list.size * 40f).coerceAtLeast(0f)
@@ -147,7 +156,7 @@ object WaypointGUI : GuiScreen() {
     }
 
     fun updateElements(area: String = currentArea ?: "") {
-        list = waypointConfig.waypoints[area]?.map { WaypointElement(it) }?.toMutableList() ?: mutableListOf()
+        list = WaypointConfig.waypoints[area]?.map { WaypointElement(it) }?.toMutableList() ?: mutableListOf()
     }
 
     override fun doesGuiPauseGame(): Boolean = false
@@ -161,11 +170,11 @@ object WaypointGUI : GuiScreen() {
         AreaButton("The Farming Islands", mouseHandler),
         AreaButton("Golden Mine", mouseHandler),
         AreaButton("Deep Caverns", mouseHandler),
+        AreaButton("Dwarven Mines", mouseHandler),
+        AreaButton("Crystal Hollows", mouseHandler),
         AreaButton("Crimson Isle", mouseHandler),
         AreaButton("Spider's Den", mouseHandler),
         AreaButton("The End", mouseHandler),
-        AreaButton("Dwarven Mines", mouseHandler),
-        AreaButton("Crystal Hollows", mouseHandler),
         AreaButton("Catacombs", mouseHandler),
         AreaButton("Dungeon Boss", mouseHandler),
         AreaButton("P1", mouseHandler),
@@ -173,5 +182,5 @@ object WaypointGUI : GuiScreen() {
         AreaButton("P3", mouseHandler),
         AreaButton("P4", mouseHandler),
         AreaButton("P5", mouseHandler),
-    ).sortedByDescending { waypointConfig.waypoints[it.area]?.size }
+    )
 }

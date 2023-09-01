@@ -4,27 +4,25 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.odin.features.general.WaypointManager.Waypoint
+import me.odin.Odin.Companion.mc
+import me.odin.Odin.Companion.scope
+import me.odin.features.impl.render.WaypointManager.Waypoint
 import java.io.File
 import java.io.IOException
 
-class WaypointConfig(path: File) {
+object WaypointConfig {
 
-    private val gson = GsonBuilder()
-        .setPrettyPrinting().create()
+    private val gson = GsonBuilder().setPrettyPrinting().create()
 
-    private val configFile = File(path, "waypoint-config.json")
     var waypoints: MutableMap<String, MutableList<Waypoint>> = mutableMapOf()
 
-    init {
+    private val configFile = File(mc.mcDataDir, "config/odin/waypoint-config.json").apply {
         try {
-            if (!path.mkdirs()) path.mkdirs()
-            configFile.createNewFile()
+            createNewFile()
         } catch (e: Exception) {
-            println("Error initializing Waypoint Config")
+            println("Error initializing module config")
         }
     }
 
@@ -47,9 +45,8 @@ class WaypointConfig(path: File) {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun saveConfig() {
-        GlobalScope.launch {
+        scope.launch(Dispatchers.IO) {
             try {
                 configFile.bufferedWriter().use {
                     it.write(gson.toJson(waypoints))

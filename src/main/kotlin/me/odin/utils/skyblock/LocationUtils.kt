@@ -1,7 +1,8 @@
 package me.odin.utils.skyblock
 
 import me.odin.Odin.Companion.mc
-import me.odin.events.ClientSecondEvent
+import me.odin.utils.clock.Executor
+import me.odin.utils.clock.Executor.Companion.register
 import me.odin.utils.skyblock.ScoreboardUtils.cleanSB
 import me.odin.utils.skyblock.ScoreboardUtils.sidebarLines
 import me.odin.utils.skyblock.dungeon.Dungeon
@@ -19,20 +20,27 @@ object LocationUtils {
     var currentDungeon: Dungeon? = null
     var currentArea: String? = null
 
-    @SubscribeEvent
-    fun onSecond(event: ClientSecondEvent) {
-        if (!inSkyblock) {
-            inSkyblock = onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
-                ?.let { cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
-        }
+    // Switch to locraw
+    init {
+        Executor(500) {
+            if (!inSkyblock) {
+                inSkyblock = onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
+                    ?.let { cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
+            }
 
-        if (currentDungeon == null)
-            if (inSkyblock && sidebarLines.any {
-                    cleanSB(it).run { (contains("The Catacombs") && !contains("Queue")) || contains("Dungeon Cleared:") }
-                }) currentDungeon = Dungeon()
+            if (currentDungeon == null) {
+                if (inSkyblock && sidebarLines.any {
+                        cleanSB(it).run {
+                            (contains("The Catacombs") && !contains("Queue")) || contains("Dungeon Cleared:")
+                        }
+                    }
+                ) currentDungeon = Dungeon()
+            }
 
-        if (currentArea == null || currentDungeon != null)
-            currentArea = getArea()
+            if (currentArea == null || currentDungeon != null) {
+                currentArea = getArea()
+            }
+        }.register()
     }
 
     @SubscribeEvent
@@ -72,10 +80,8 @@ object LocationUtils {
         val netHandlerPlayClient: NetHandlerPlayClient = mc.thePlayer?.sendQueue ?: return null
         val list = netHandlerPlayClient.playerInfoMap ?: return null
 
-        if (currentDungeon != null) {
-            return "Catacombs${currentDungeon!!.floor}" +
-                    if (currentDungeon!!.inBoss) { if (getPhase() != null) "P${getPhase()}" else "Boss" } else ""
-        }
+        if (currentDungeon != null)
+            return if (getPhase() != null) "P${getPhase()}" else if (currentDungeon!!.inBoss) "Dungeon Boss" else "Catacombs"
 
         var area: String? = null
         var extraInfo: String? = null

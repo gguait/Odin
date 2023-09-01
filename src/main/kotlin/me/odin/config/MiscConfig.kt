@@ -4,33 +4,33 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.odin.features.m7.TerminalTimes
+import me.odin.Odin.Companion.scope
+import me.odin.features.impl.floor7.TerminalTimes
 import java.io.File
 import java.io.IOException
 
 class MiscConfig(path: File) {
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
-    private val highlightConfigFile = File(path, "highlight-config.json")
+    private val espConfigFile = File(path, "esp-config.json")
     private val blacklistConfigFile = File(path, "blacklist-config.json")
+    private val autoSellConfigFile = File(path, "autoSell-config.json")
     private val terminalPBFile = File(path, "terminalPB.json")
-    private val hasJoinedFile = File(path, "hasJoined.json")
 
-    var hightlightList: MutableList<String> = mutableListOf()
+    var espList: MutableList<String> = mutableListOf()
     var blacklist: MutableList<String> = mutableListOf()
-    private inline val terminalPB get() = TerminalTimes.Times.values().map { "${it.fullName}: ${it.time}"}
-    var hasJoined: Boolean = false
+    var autoSell: MutableList<String> = mutableListOf()
+    private inline val terminalPB get() = TerminalTimes.Times.values().map { "${it.fullName}: ${it.time}"} // todo: change this into a number setting and make it hidden.
 
     init {
         try {
             if (!path.exists()) path.mkdirs()
-            highlightConfigFile.createNewFile()
+            espConfigFile.createNewFile()
             blacklistConfigFile.createNewFile()
+            autoSellConfigFile.createNewFile()
             terminalPBFile.createNewFile()
-            hasJoinedFile.createNewFile()
         } catch (e: Exception) {
             println("Error initializing configs.")
         }
@@ -39,29 +39,27 @@ class MiscConfig(path: File) {
 
     fun loadConfig() {
         try {
-            with(highlightConfigFile.bufferedReader().use { it.readText() }) {
+            with(espConfigFile.bufferedReader().use { it.readText() }) {
                 if (this == "") return
-                hightlightList = gson.fromJson(this, object : TypeToken<MutableList<String>>() {}.type)
+                espList = gson.fromJson(this, object : TypeToken<MutableList<String>>() {}.type)
             }
             with(blacklistConfigFile.bufferedReader().use { it.readText() }) {
                 if (this == "") return
                 blacklist = gson.fromJson(this, object : TypeToken<MutableList<String>>() {}.type)
             }
+            with(autoSellConfigFile.bufferedReader().use { it.readText() }) {
+                if (this == "") return
+                autoSell = gson.fromJson(this, object : TypeToken<MutableList<String>>() {}.type)
+            }
             with(terminalPBFile.bufferedReader().use { it.readText() }) {
                 if (this == "") return
                 val a: MutableList<String> = gson.fromJson(this, object : TypeToken<MutableList<String>>() {}.type)
                 a.forEach {
-                    println(it)
                     val (name, time) = it.split(": ")
                     TerminalTimes.Times.values().find { a -> a.fullName == name }?.let { b ->
                         b.time = time.toDouble()
-                        println("Loaded ${b.fullName} with time ${b.time}")
                     }
                 }
-            }
-            with(hasJoinedFile.bufferedReader().use { it.readText() }) {
-                if (this == "") return
-                hasJoined = gson.fromJson(this, object : TypeToken<Boolean>() {}.type)
             }
         } catch (e: JsonSyntaxException) {
             println("Error parsing configs.")
@@ -72,21 +70,20 @@ class MiscConfig(path: File) {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun saveAllConfigs() {
-        GlobalScope.launch {
+        scope.launch(Dispatchers.IO) {
             try {
-                highlightConfigFile.bufferedWriter().use {
-                    it.write(gson.toJson(hightlightList))
+                espConfigFile.bufferedWriter().use {
+                    it.write(gson.toJson(espList))
                 }
                 blacklistConfigFile.bufferedWriter().use {
                     it.write(gson.toJson(blacklist))
                 }
+                autoSellConfigFile.bufferedWriter().use {
+                    it.write(gson.toJson(autoSell))
+                }
                 terminalPBFile.bufferedWriter().use {
                     it.write(gson.toJson(terminalPB))
-                }
-                hasJoinedFile.bufferedWriter().use {
-                    it.write(gson.toJson(hasJoined))
                 }
             } catch (e: IOException) {
                 println("Error saving configs.")

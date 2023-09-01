@@ -7,11 +7,11 @@ plugins {
     id("gg.essential.loom") version "0.10.0.+"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    kotlin("jvm") version "1.8.20"
+    kotlin("jvm") version "1.9.0"
 }
 
 group = "com.example.archloomtemplate"
-version = "1.0.2"
+version = "1.1.0"
 
 // Toolchains:
 java {
@@ -74,20 +74,13 @@ dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
 
-    // If you don't want mixins, remove these lines
-    shadowImpl("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-        isTransitive = false
-    }
-    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    compileOnly("org.spongepowered:mixin:0.8.5")
 
-    // If you don't want to log in with your real minecraft account, remove this line
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.0")
 
-    // Basic OneConfig dependencies for legacy versions. See OneConfig example mod for more info
-    compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.2.0-alpha+") // Should not be included in jar
-    // include should be replaced with a configuration that includes this in the jar
-    shadowImpl("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+") // Should be included in jar
-
+    compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.2.0-alpha+")
+    shadowImpl("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+")
 }
 
 // Configures our shadow/shade configuration, so we can
