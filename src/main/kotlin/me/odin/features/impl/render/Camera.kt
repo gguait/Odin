@@ -19,7 +19,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 
 object Camera : Module(
     "Camera",
-    category = Category.RENDER
+    category = Category.RENDER,
+    description = "Allows you to disable front cam."
 ) {
     private val frontCamera: Boolean by BooleanSetting("No Front Camera")
     private val cameraClip: Boolean by BooleanSetting("Camera Clip")
@@ -33,13 +34,7 @@ object Camera : Module(
         getTextWidth(string, 16f, Fonts.REGULAR) to 16f
     }
 
-    fun getCameraDistance(): Float {
-        return if (enabled) cameraDist else 4f
-    }
 
-    fun getCameraClipEnabled(): Boolean {
-        return if (enabled) cameraClip else false
-    }
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {

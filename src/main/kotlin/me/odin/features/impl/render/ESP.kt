@@ -21,7 +21,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 object ESP : Module(
     "Highlight",
     category = Category.RENDER,
-    tag = TagType.FPSTAX
+    tag = TagType.FPSTAX,
+    description = "Allows you to highlight selected mobs."
+
 ) {
     private val color: Color by ColorSetting("Color", Color(255, 0, 0))
     private val thickness: Float by NumberSetting("Outline Thickness", 5f, 5f, 20f, 0.5f)
