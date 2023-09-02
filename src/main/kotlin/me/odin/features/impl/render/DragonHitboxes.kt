@@ -69,6 +69,7 @@ object DragonHitboxes : Module(
         for (dragon in dragonRenderQueue) {
             for (entity in dragon.dragonPartArray) {
                 val entityId = entity.entityId
+                if (entityId == PersonalDragon.entityDragon?.entityId) return
                 entityPositions[entityId]?.apply {
                     val lastX = this[0]
                     val lastY = this[1]
@@ -83,7 +84,7 @@ object DragonHitboxes : Module(
                     val w = entity.width
                     val h = entity.height
 
-                    RenderUtils.drawCustomESPBox(dX - w / 2, dY, dZ - w / 2, w.toDouble(), h.toDouble(), color, lineWidth, phase = true)
+                    RenderUtils.drawCustomESPBox(dX - w / 2, dY, dZ - w / 2, w.toDouble(), h.toDouble(), color, lineWidth, phase = false)
                 }
             }
         }
