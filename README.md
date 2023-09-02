@@ -6,43 +6,49 @@ As far as the community is aware this mod should not break any hypixel rules but
 ## Features
 
 ### Dungeon
-- **Mask Alert:** Provides notifications when a mask becomes available.
-- **Ready Alert:** Sends reminders to ready up when a dungeon starts.
-- **Ult Alert:** Sends reminders to use your ult in specific scenarios.
-- **Wish Alert:** Sends alerts when a teammate's health is low.
-- **Can Clip:** Indicates when you can clip through a stair while battling a boss.
-- **Key Highlight:** Highlights the Wither/Blood key with a box.
-- **Blessing Display:** Showcases the active dungeon blessings on your screen.
-- **Teammates Highlight:** Highlights your dungeon teammates and makes their name tags more visible.
-- **Watcher Bar:** Shows the number of mobs killed and the number left.
+- **Auto Dungeon Requeue:** Automatically starts a new dungeon at the end of a dungeon.
+- **Mimic Killed Message:** Sends message in party chat when mimic is killed.
+- **TeammatesHighlight:** Enhances visibility of your dungeon teammates and their name tags.
+- **Terracotta Timer:** Displays the time until the terracotta spawns.
+- **Auto Extra Stats:** Automatically clicks the extra stats at the end of a dungeon.
+- **Blessing Display:** Displays the current blessings of the dungeon.
+- **Watcher Bar:** Shows the watcher's health.
+- **Auto Ice Fill:** AutomaTically completes the ice fill puzzle.
+- **Key Highlights:** Draws a box around the key.
 
-### General
-- **Blaze Atunement:** Outlines the Slayer boss with the color of atunement.
-- **Deployable Timer:** Displays the active deployable and the remaining time.
-- **Highlights:** Highlights mobs as per your choice (/highlight).
-- **FPS:** Fixes certain Hypixel elements to improve performance.
-- **Waypoints:** Allows the creation of waypoints with various triggers.
-- **Party Commands:** Provides custom commands for party use (!help in party chat).
-- **Guild Commands:** Provides custom commands for guild use (!help in guild chat).
-- **Guild GM:** Automatically sends 'good morning' (gm) or 'good night' (gn) in guild chat in response to others.
-- **ServerHUD:** Displays your ping and the server's ticks per second (TPS).
+### Floor 7
+- **Decoy Dead Message:** Sends a message in party chat when a decoy dies
+- **Necron Drop Timer:** Shows a timer for when Necron drops you down.
+- **Relic Announcer:** Automatically announce your relic to the rest of the party.
+- **Terminal Times:** Keeps track of how long you took to complete a terminal.
+- **Dragon Boxes:** Shows semi-accurate kill boxes for M7 dragons.
+- **Dragon Timer:** Displays a timer for when M7 dragons spawn.
+- **Leap Helper:** Shows which player is the most practical to leap to in the M7 boss-fight.
 
-### M7
-- **EDrag Reminder:** Reminds you to equip the Ender Dragon pet when phase 5 starts.
-- **Dragon Boxes:** Indicates locations where the dragon can be killed.
-- **Dragon Timer:** Displays when the dragon is about to spawn.
-- **Terminal Times:** Shows the duration taken to complete a terminal.
-- **Dragon Waypoints:** Displays waypoints for phase 5.
+### Render
+- **Dragon Hitboxes:** Renders real dragon hitboxes
+- **Personal Dragon:** Renders your own personal dragon.
+- **No Cursor Reset:** Makes your cursor stop resetting between guis.
+- **CPS Display:** Displays your CPS
+- **Serverhud:** Displays your current ping and the server's TPS.
+- **Waypoints:** Custom Waypoints /wp gui.
+- **No Render:** Disables certain render functions when they are not necessary, resulting in a decrease in gpu usage
+- **Nick Hider:** Replace your name, color codes work.
+- **Camera:** Allows you to disable front cam.
+- **Highlights:** Allows you to highlight selected mobs.
 
-### QOL
-- **Abiphone Ghoster:** Blocks calls from Abiphone.
-- **Auto Sprint:** Toggles sprint.
-- **Broken Hype:** Sends alerts when your Hype stops granting combat XP.
-- **Kuudra Alerts:** Sends notifications regarding specific Kuudra events.
-- **Camera:** Allows you to disable front camera.
-- **No Crusor Reset:** Prevents your cursor from getting reset when swapping GUI.
-- **Reminders:** All sort of reminders for different parts of the game
-- **Gyro Range:** Shows the range of the gyrokinetic wand.
-- **Vanquisher Notifier:** Sends alerts and messages when a Vanquisher spawns.
+##Skyblock
+- **Auto-Renew Hollows Pass:** Automatically rebuy a crystal hollows pass.
+- **Private Commands:** Offers custom commands for private message use, accessible via !help in private chat.
+- **Deployable Timer:** Shows the time left on deployables.
+- **Party Commands:** Party commands! Use /blacklist to blacklist players from using this module. !help for help.
+- **Guild Commands:** Guild commands! Use /blacklist to blacklist players from using this module. !help for help.
+- **Kuudra Alerts:** Displays alerts for certain kuudra events.
+- **Vanq Notifier:** Sends a message whenever a vanquisher spawns
+- **Gyro Range:** Renders a helpful circle to show the range of the Gyrokinetic Wand.
+- **Auto Sprint:** Automatically makes you sprint.
+- **Escrow Fix:** Automatically reopens the ah/bz when it gets closed by escrow.
+- **Reminders:** helpful reminders for dungeons.
+- **Can Clip:** Tells you if you are currently able to clip through a stair under you.
 
 Note that the specifics of these features might vary depending on the version of Odin you are using and your specific client configuration.
