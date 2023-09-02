@@ -15,9 +15,9 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-@AlwaysActive
+// TODO: Test
 object DragonDeathCheck : Module(
-    "Dragon death confrimation",
+    "Dragon death confirmation",
     category = Category.FLOOR7
 
 ) {

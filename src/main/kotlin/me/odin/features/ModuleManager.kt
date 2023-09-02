@@ -58,7 +58,6 @@ object ModuleManager {
         NoCursorReset,
         Reminders,
 
-        BPS,
         TerminalTimes,
         Waypoints,
         Server,
@@ -74,8 +73,7 @@ object ModuleManager {
         TerracottaTimer,
         MimicMessage,
         AutoRenewCrystalHollows,
-        AutoDungeonReque,
-        //DragonDeathCheck
+        AutoDungeonReque
     )
 
     @SubscribeEvent
