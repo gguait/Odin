@@ -94,8 +94,6 @@ tasks.named<ShadowJar>("shadowJar") {
 
 tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
 }
 tasks.withType<KotlinCompile> {
     kotlinOptions {
